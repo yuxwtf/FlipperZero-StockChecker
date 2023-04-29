@@ -4,7 +4,7 @@
 
 # Preview
 
-![image](https://user-images.githubusercontent.com/99289712/234636531-c6b85e27-dc4f-4d96-bd27-66f6f5b3814a.png)
+![image](https://user-images.githubusercontent.com/99289712/235312817-07d5dc59-15d0-462b-a648-976abf5101fa.png)
 
 # How To Use?
 
