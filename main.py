@@ -63,19 +63,13 @@ def checkForStocks():
         if any(child for child in p.descendants if 'sold out' in str(child).lower()):
             results["FlipperZero"] = {"Available": False, "Stock": "Out of stock"}
     
-    results["FlipperZero"] = {"Available": True, "Stock": eu_stock}
+    if type(eu_stock) == int:
+        results["FlipperZero"] = {"Available": True if int(eu_stock) > 0 else False, "Stock": eu_stock}
+    else:
+        results["FlipperZero"] = {"Available": False, "Stock": "Out of stock"}
 
     # Lab401
 
-    try:
-        json = session.get('https://lab401.com/fr/products/flipper-zero.js').json()
-        if json['available'] == True:
-            results["Lab401"] = {"Available": True, "Stock": eu_stock}
-        else:
-            results["Lab401"] = {"Available": False, "Stock": "Out of stock"}
-    except:
-        results["Lab401"] = {"Available": "Unknow", "Stock": "???"}
-    
     try:
         headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
         content = session.get('https://hackerwarehouse.com/product/flipper-zero/', headers=headers).content
@@ -107,12 +101,22 @@ while True:
     print(colorama.Fore.CYAN + "\n\n                                              Flipper Zero Stock Checker")
     print(colorama.Fore.CYAN + "                                                   Made by @yux" + colorama.Fore.RESET)
     print('\n'*6)
+    sold = 0
+    try:
+        sold = 0
+        laststock = stock['FlipperZero']['Stock']
+        if stock != laststock:
+            sold = stock['FlipperZero']['Stock'] - laststock
+    except:
+        pass
+    
     for key, value in stock.items():
-        print(colorama.Fore.WHITE + f"                     > Shop: {colorama.Fore.BLUE}{key}{colorama.Fore.WHITE} - Is Available: {colorama.Fore.GREEN if value['Available'] == True else colorama.Fore.RED}{value['Available']}{colorama.Fore.WHITE} - Stock: {colorama.Fore.YELLOW}{value['Stock']}{colorama.Fore.RESET}")
+        print(colorama.Fore.WHITE + f"                     > Shop: {colorama.Fore.BLUE}{key}{colorama.Fore.WHITE} - Is Available: {colorama.Fore.GREEN if value['Available'] == True else colorama.Fore.RED}{value['Available']}{colorama.Fore.WHITE} - Stock: {colorama.Fore.YELLOW}{value['Stock']}{colorama.Fore.RESET} ({sold} Sold since last check)" + colorama.Fore.RESET)
 
     # count down to down to 10 seconds in the ter
     print('\n'*6)
     ncs = random.randint(10, 25)
+    laststock = stock['FlipperZero']['Stock']
     for i in range(0, ncs, 1):
         print(colorama.Fore.CYAN + " "*20 + f"            Last check: {i} second(s) // Next check in {ncs-i} second(s)" + " "*20 + colorama.Fore.RESET, flush=True, end='\r')
         time.sleep(1)
